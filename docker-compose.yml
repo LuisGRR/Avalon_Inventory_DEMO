@@ -1,0 +1,34 @@
+version: "3.88"
+services:
+  app:
+    image: avalon-inventory
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: avalon-inventory-container
+    ports:
+      - "9080:9080"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/db_avalon_inventory
+      SPRING_DATASOURCE_USERNAME: merlin
+      SPRING_DATASOURCE_PASSWORD: avalonpassword
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=merlin
+      - POSTGRES_PASSWORD=avalonpassword
+      - POSTGRES_DB=db_avalon_inventory
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
